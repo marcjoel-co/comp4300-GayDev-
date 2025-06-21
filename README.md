@@ -1,3 +1,4 @@
 # comp4300-GayDev-
+This is a repository for comp4300
 
-GAY DEV GAY DEV GAY DEV
+AI driven knowledge is fucking effecient``

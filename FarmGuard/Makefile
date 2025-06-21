@@ -1,49 +1,46 @@
-# Makefile for Project FarmGuard
+# Makefile for Project FarmGuard (Windows/MinGW with SDL3) - V.0.1.2_FIXED
 
-# 1. Compiler and Flags
-CXX = clang++
+CXX = g++
 CXXFLAGS = -std=c++17 -g -Wall
-# Get SDL2 flags for include paths
-CXXFLAGS += $(shell sdl2-config --cflags)
 
-# 2. Directories
+# --- DIRECTORY SETUP ---
 SRCDIR = src
-INCDIR = include
 BUILDDIR = build
+LIBDIR = libs
 
-# 3. Executable Name
-TARGET = $(BUILDDIR)/FarmGuard
+# --- COMPILER FLAGS ---
+# Tell the compiler to look for headers in our library's include folder.
+# The -I flag adds a directory to the search path.
+INC_PATHS = -I$(LIBDIR)/include
 
-# 4. Source Files and Object Files
-# Find all .cpp files in the source directory
+# --- LINKER FLAGS ---
+# Tell the linker where to find library files (-L) and which libraries to link (-l).
+LIB_PATHS = -L$(LIBDIR)/lib
+LINK_LIBS = -lSDL3
+
+# --- TARGETS ---
+TARGET = $./FarmGuard.exe
 SOURCES = $(wildcard $(SRCDIR)/*.cpp)
-# Replace the .cpp extension with .o and put them in the build directory
 OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(BUILDDIR)/%.o, $(SOURCES))
 
-# 5. Linker Flags
-# Get SDL2 flags for library paths and linking
-LDFLAGS = $(shell sdl2-config --libs)
+# --- BUILD RULES ---
+all: $(TARGET) copy_dll
 
-# 6. Build Rules
-# The 'all' rule is the default goal.
-all: $(TARGET)
-
-# Rule to link the final executable
 $(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
+	@mkdir -p $(BUILDDIR)
+	$(CXX) $(OBJECTS) -o $(TARGET) $(LIB_PATHS) $(LINK_LIBS)
 
-# Rule to compile a .cpp source file into a .o object file
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
-	@mkdir -p $(BUILDDIR) # Ensure build directory exists
-	$(CXX) $(CXXFLAGS) -I$(INCDIR) -c $< -o $@
+	@mkdir -p $(BUILDDIR)
+	$(CXX) $(CXXFLAGS) $(INC_PATHS) -c $< -o $@
 
-# 7. Phony Targets (commands that don't represent files)
-.PHONY: all clean run
+copy_dll:
+	cp $(LIBDIR)/bin/SDL3.dll $(BUILDDIR)
 
-# Rule to clean up build artifacts
+.PHONY: all clean run copy_dll
+
 clean:
 	rm -rf $(BUILDDIR)/*
 
-# Rule to build and run the project
 run: all
-	./$(TARGET)
+	cd $(BUILDDIR) && ./$(TARGET)
