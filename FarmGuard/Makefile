@@ -1,4 +1,4 @@
-# Makefile for Project FarmGuard (Windows/MinGW with SDL3) - V.0.1.2_FIXED
+# Makefile for Project FarmGuard (Windows/MinGW with SDL3) - V.0.2.2
 
 CXX = g++
 CXXFLAGS = -std=c++17 -g -Wall
@@ -9,17 +9,14 @@ BUILDDIR = build
 LIBDIR = libs
 
 # --- COMPILER FLAGS ---
-# Tell the compiler to look for headers in our library's include folder.
-# The -I flag adds a directory to the search path.
 INC_PATHS = -I$(LIBDIR)/include
 
 # --- LINKER FLAGS ---
-# Tell the linker where to find library files (-L) and which libraries to link (-l).
 LIB_PATHS = -L$(LIBDIR)/lib
 LINK_LIBS = -lSDL3
 
 # --- TARGETS ---
-TARGET = $./FarmGuard.exe
+TARGET = $(BUILDDIR)/FarmGuard.exe
 SOURCES = $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(BUILDDIR)/%.o, $(SOURCES))
 
@@ -42,5 +39,6 @@ copy_dll:
 clean:
 	rm -rf $(BUILDDIR)/*
 
+# CORRECTED: Use `notdir` to get just the filename for execution.
 run: all
-	cd $(BUILDDIR) && ./$(TARGET)
+	cd $(BUILDDIR) && ./$(notdir $(TARGET))
