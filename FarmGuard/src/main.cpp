@@ -9,12 +9,13 @@ int main(int argc, char* argv[]) {
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
-    
+    // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
         return 1;
     }
 
+    // Create window
     window = SDL_CreateWindow("Project FarmGuard", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN);
     if (window == nullptr) {
         std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
@@ -22,6 +23,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // Create renderer
     renderer = SDL_CreateRenderer(window, nullptr);
     if (renderer == nullptr) {
         std::cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
@@ -31,37 +33,49 @@ int main(int argc, char* argv[]) {
     }
 
     bool running = true;
-
-    // Event handler
     SDL_Event e;
+
+    // Player rectangle
+    SDL_FRect playerRect;
+    playerRect.x = 100.0f;
+    playerRect.y = 50.0f;
+    playerRect.w = 32.0f;
+    playerRect.h = 64.0f;
 
     // --- The Game Loop ---
     while (running) {
-        // 1. Handle events on queue (POLL)
+        // 1. Handle events
         while (SDL_PollEvent(&e) != 0) {
-            // User requests quit
             if (e.type == SDL_EVENT_QUIT) {
                 running = false;
             }
+            // Add ESC key to exit fullscreen easily
+            if (e.type == SDL_EVENT_KEY_DOWN) {
+                if (e.key.key == SDLK_ESCAPE) {
+                    running = false;
+                }
+            }
         }
 
-        // 2. Update game state (UPDATE) - Nothing to update yet!
+        // 2. Update game state
+        // (Nothing to update yet)
 
-        // 3. Render to screen (DRAW)
-        // Set the draw color to a nice dark blue
-        SDL_SetRenderDrawColor(renderer, 25, 25, 50, 255);
-        // Clear screen with that color
+        // 3. Render
+        // Set background color (yellow-ish)
+        SDL_SetRenderDrawColor(renderer, 255, 254, 50, 255);
         SDL_RenderClear(renderer);
 
-        // Update screen
+        // Set player rectangle color (red)
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_RenderFillRect(renderer, &playerRect);
+
+        // Present to screen
         SDL_RenderPresent(renderer);
     }
 
     // --- Cleanup ---
-    // Destroy renderer and window
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    // Quit SDL subsystems
     SDL_Quit();
 
     return 0;
