@@ -1,4 +1,4 @@
-# Makefile for Project FarmGuard (Windows/MinGW with SDL3) - V.0.2.3
+# Makefile for Project FarmGuard (Windows/MinGW with SDL3) - V.0.2.4
 
 CXX = g++
 CXXFLAGS = -std=c++17 -g -Wall
@@ -9,15 +9,18 @@ BUILDDIR = build
 LIBDIR = libs
 
 # --- COMPILER FLAGS ---
-INC_PATHS = -I$(LIBDIR)/include
+# Add include path for your own headers
+INC_PATHS = -I$(LIBDIR)/include -Iinclude
 
 # --- LINKER FLAGS ---
 LIB_PATHS = -L$(LIBDIR)/lib
-LINK_LIBS = -lSDL3
+LINK_LIBS = -lSDL3 -lSDL3_image
 
 # --- TARGETS ---
 TARGET = $(BUILDDIR)/FarmGuard.exe
-SOURCES = $(wildcard $(SRCDIR)/*.cpp)
+
+# Explicitly list source files to ensure keyEvents.cpp is included
+SOURCES = $(SRCDIR)/main.cpp $(SRCDIR)/keyEvents.cpp
 OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(BUILDDIR)/%.o, $(SOURCES))
 
 # --- BUILD RULES ---
@@ -29,6 +32,7 @@ all: $(TARGET) copy_dll
 copy_dll: $(TARGET)
 	@echo "Copying required DLLs..."
 	cp $(LIBDIR)/bin/SDL3.dll $(BUILDDIR)
+	cp $(LIBDIR)/bin/SDL3_image.dll $(BUILDDIR)
 
 $(TARGET): $(OBJECTS)
 	@echo "Linking executable..."
@@ -53,4 +57,10 @@ clean:
 # The 'run' rule NO LONGER builds. It only executes the existing file.
 run:
 	@echo "Running game..."
-	cd $(BUILDDIR) && ./$(notdir $(TARGET))
+	$(BUILDDIR)/$(notdir $(TARGET))
+
+# Optional: Add a debug rule that shows the working directory
+debug:
+	@echo "Running game in debug mode..."
+	@echo "Working directory: $$(pwd)"
+	$(BUILDDIR)/$(notdir $(TARGET))
