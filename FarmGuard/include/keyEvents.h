@@ -8,5 +8,5 @@ enum class MoveDirection {
     UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT
 };
 
-// The function prototype must match the implementation
+
 MoveDirection handleKeyDown(const bool* keystate);

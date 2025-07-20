@@ -2,3 +2,19 @@
 *.env
 .DS_Store
 *.env
+
+# build directories
+/FarmGuard/build/ 
+/FarmGuard/*.exe
+
+# Ignore the Windows libraries folder
+/FarmGuard/libs/
+
+# Ignore local editor configuration
+/FarmGuard/.vscode/
+
+# Ignore macOS specific files
+.DS_Store
+Makefile.mac
+
+# recall: gitignore is used to specify files and directories that should not be tracked within a git repoository.

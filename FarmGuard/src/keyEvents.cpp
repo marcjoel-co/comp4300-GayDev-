@@ -1,6 +1,6 @@
 #include "keyEvents.h"
 
-// Update parameter type to match SDL3's bool* return type
+
 MoveDirection handleKeyDown(const bool* keystate) 
 {
     bool up    = keystate[SDL_SCANCODE_UP]    || keystate[SDL_SCANCODE_W] || keystate[SDL_SCANCODE_KP_8];
