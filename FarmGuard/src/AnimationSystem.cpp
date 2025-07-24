@@ -1,5 +1,9 @@
 #include "AnimationSystem.h"
 #include <algorithm>
+#include <iostream>
+#include <SDL3/SDL.h>
+#include <SDL_image.h>
+
 
 void AnimationSystem::update(GrowthAnimationComponent& anim, float deltaTime)
 {
@@ -18,6 +22,7 @@ void AnimationSystem::update(GrowthAnimationComponent& anim, float deltaTime)
         anim.currentFrame = anim.totalFrames - 1;
         anim.isMature = true;
     }
+
     else
     {
         float progress = anim.currentGrowthTime / anim.totalGrowthTime;
